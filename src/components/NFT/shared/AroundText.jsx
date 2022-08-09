@@ -1,16 +1,20 @@
 import React, { useRef, useState, useEffect } from 'react'
 
-const text = 'AAAAAAAAAAAAAAAA'
+const text = 'AAAAAAAAAA BBBBBBBBBB CCCCCCCCC DDDDDDDDD EEEEEEEEEE FFFFFFFFFF GGGGGGGGGG HHHHHHHHHH IIIIIIIIII JJJJJJJJJJ'
 
 const compStyle = {
   position: 'relative',
   width: '350px',
-  height: '350px'
+  height: '350px',
+  fontFamily: 'DMMono',
+  fontWeight: '500',
+  fontStyle: 'italic',
+  fontSize: '22px',
+  lineHeight: '60px',
+  color: 'transparent'
 }
 
 const commonContainerStyle = {
-  lineHeight: '37.5px',
-  color: 'white',
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   width: 'calc(100% - 75px)',
@@ -31,21 +35,11 @@ const topContainerStyle = {
   left: '0'
 }
 
-const topTextStyle = {
-  ...commonTextStyle,
-  animation: 'marquee-top 10s linear infinite'
-}
-
 const rightContainerStyle = {
   ...commonContainerStyle,
   transform: 'rotate(90deg)',
   top: '37.5px',
   left: 'calc(100% - 37.5px)'
-}
-
-const rightTextStyle = {
-  ...commonTextStyle,
-  animation: 'marquee-right 10s linear infinite'
 }
 
 const bottomContainerStyle = {
@@ -55,11 +49,6 @@ const bottomContainerStyle = {
   left: 'calc(100% - 75px)'
 }
 
-const bottomTextStyle = {
-  ...commonTextStyle,
-  animation: 'marquee-bottom 10s linear infinite'
-}
-
 const leftContainerStyle = {
   ...commonContainerStyle,
   transform: 'rotate(270deg)',
@@ -67,58 +56,70 @@ const leftContainerStyle = {
   left: '-37.5px'
 }
 
-const leftTextStyle = {
-  ...commonTextStyle,
-  animation: 'marquee-left 10s linear infinite'
-}
-
 const getTransformValues = (widths) => {
   const { cW, tW } = widths
 
-  const boxFilled = Math.min(Math.floor(tW / cW), 4) // 3
-  const boxOffsetAmount = 4 - boxFilled // 1
-  const textRemainderSpace = tW - (cW * boxFilled) // whatever is remaining on last box
-  const extraSpace = boxOffsetAmount ? 0 : 100
-
-  console.log(boxFilled, boxOffsetAmount, textRemainderSpace, extraSpace)
+  // filledBoxes = amount of boxes filled | max 4, min 0
+  // emptyBoxes = amount of empty boxes | max 4, min 0
+  // textRemainderSpace = remainder tW on last box | 0 boxes are filled
+  // extraSpace = spacing between end and start of text to prevent sticking
+  const filledBoxes = Math.min(Math.floor(tW / cW), 4)
+  const emptyBoxes = 4 - filledBoxes
+  const textRemainderSpace = filledBoxes === 4 ? 0 : tW - (cW * filledBoxes)
+  const extraSpace = emptyBoxes ? 0 : 50
 
   return {
-    emptyWidth: cW * (boxOffsetAmount) - textRemainderSpace + extraSpace,
-    bottom: { start: -(tW + cW * (boxOffsetAmount) - textRemainderSpace + extraSpace), end: -(cW * 0) },
-    left: { start: -(tW + cW * (boxOffsetAmount + 1) - textRemainderSpace + extraSpace), end: -(cW * 1) },
-    top: { start: -(tW + cW * (boxOffsetAmount + 2) - textRemainderSpace + extraSpace), end: -(cW * 2) },
-    right: { start: -(tW + cW * (boxOffsetAmount + 3) - textRemainderSpace + extraSpace), end: -(cW * 3) }
+    totalWidth: tW * 2 + cW * (emptyBoxes) - textRemainderSpace + extraSpace,
+    emptyWidth: cW * (emptyBoxes) - textRemainderSpace + extraSpace,
+    bottom: { start: -(tW + cW * (emptyBoxes) - textRemainderSpace + extraSpace), end: -(cW * 0) },
+    left: { start: -(tW + cW * (emptyBoxes + 1) - textRemainderSpace + extraSpace), end: -(cW * 1) },
+    top: { start: -(tW + cW * (emptyBoxes + 2) - textRemainderSpace + extraSpace), end: -(cW * 2) },
+    right: { start: -(tW + cW * (emptyBoxes + 3) - textRemainderSpace + extraSpace), end: -(cW * 3) }
   }
 }
 
-function CompsNFTAroundText() {
+function CompsNFTAroundText({ color }) {
   const containerReference = useRef(null)
   const textReference = useRef(null)
+  const [isFontReady, setIsFontReady] = useState(false)
   const [isReady, setIsReady] = useState(false)
   const [transformValues, setTransformValues] = useState({})
 
   useEffect(() => {
-    if (containerReference.current && textReference.current) {
+    const checkFontsReady = async () => {
+      await document.fonts.ready
+      setIsFontReady(true)
+    }
+
+    checkFontsReady()
+  }, [])
+
+  useEffect(() => {
+    if (containerReference.current && textReference.current && isFontReady) {
       setIsReady(true)
       setTransformValues(getTransformValues({
         cW: containerReference.current.offsetWidth,
         tW: textReference.current.offsetWidth
       }))
     }
-  }, [containerReference, textReference])
+  }, [containerReference, textReference, isFontReady])
 
-  const renderText = () => {
+  const renderText = (key) => {
     if (!isReady) return null
+
+    const velocityPerSecond = 100
+    const animationTime = (transformValues.totalWidth / velocityPerSecond).toFixed(1)
+
     return (
-      <>
+      <span style={{ ...commonTextStyle, animation: `marquee-${key} ${animationTime}s linear infinite` }}>
         <span style={commonTextStyle}>{text}</span>
         <span style={{ ...commonTextStyle, width: `${transformValues.emptyWidth}px` }} />
         <span style={commonTextStyle}>{text}</span>
-      </>
+      </span>
     )
   }
 
-  const renderKeyframes = () => {
+  const renderStyles = () => {
     if (!isReady) return null
     return (
       <style>
@@ -166,33 +167,25 @@ function CompsNFTAroundText() {
   }
 
   return (
-    <div style={compStyle}>
+    <div style={{ ...compStyle, WebkitTextStroke: `1px ${color}` }}>
       {/* Reference | Hidden */}
-      <div ref={containerReference} className="bg-black" style={{ ...topContainerStyle, display: 'block' }}>
-        <span ref={textReference} style={commonTextStyle}>{text}</span>
+      <div ref={containerReference} style={{ ...topContainerStyle, visibility: 'hidden' }}>
+        <span id="test" ref={textReference} style={commonTextStyle}>{text}</span>
       </div>
 
       {/* Top */}
-      <div className="bg-primary" style={topContainerStyle}>
-        <span style={topTextStyle}>{ renderText() }</span>
-      </div>
+      <div style={topContainerStyle}>{ renderText('top') }</div>
 
       {/* Right */}
-      <div className="bg-success" style={rightContainerStyle}>
-        <span style={rightTextStyle}>{ renderText() }</span>
-      </div>
+      <div style={rightContainerStyle}>{ renderText('right') }</div>
 
       {/* Bottom */}
-      <div className="bg-warning" style={bottomContainerStyle}>
-        <span style={bottomTextStyle}>{ renderText() }</span>
-      </div>
+      <div style={bottomContainerStyle}>{ renderText('bottom') }</div>
 
       {/* Left */}
-      <div className="bg-danger" style={leftContainerStyle}>
-        <span style={leftTextStyle}>{ renderText() }</span>
-      </div>
+      <div style={leftContainerStyle}>{ renderText('left') }</div>
 
-      { renderKeyframes() }
+      { renderStyles() }
     </div>
   )
 }

@@ -16,15 +16,15 @@ const compsStyle = {
   background: colors.background
 }
 
-function CompsNFTBeforeOpen() {
+function CompsNFTUnopen() {
   return (
     <div
       style={compsStyle}
     >
-      <CompsNFTGrid color={colors.color} display="four" />
+      <CompsNFTGrid color={colors.color} display="one" />
       <CompsNFTAroundText color={colors.color} />
     </div>
   )
 }
 
-export default CompsNFTBeforeOpen
+export default CompsNFTUnopen
