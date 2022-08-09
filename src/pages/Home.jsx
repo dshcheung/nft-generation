@@ -1,13 +1,11 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+
+import CompsNFTBeforeOpen from '@/components/NFT/BeforeOpen'
 
 function PagesHome() {
   return (
-    <div id="pages-home" className="container">
-      <header className="text-center border-bottom">
-        <h1>Home Page</h1>
-        <div><Link to="/another">Another Page</Link></div>
-      </header>
+    <div id="pages-home" className="container py-3">
+      <CompsNFTBeforeOpen />
     </div>
   )
 }
