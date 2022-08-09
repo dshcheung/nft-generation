@@ -75,64 +75,19 @@ const leftTextStyle = {
 const getTransformValues = (widths) => {
   const { cW, tW } = widths
 
-  console.log(cW, tW, tW / cW)
+  const boxFilled = Math.min(Math.floor(tW / cW), 4) // 3
+  const boxOffsetAmount = 4 - boxFilled // 1
+  const textRemainderSpace = tW - (cW * boxFilled) // whatever is remaining on last box
+  const extraSpace = boxOffsetAmount ? 0 : 100
 
-  // If tW is bigger sum of 4 sides
-  if (tW > cW * 4) {
-    console.log('4')
-    return {
-      emptyWidth: cW * 0 - (tW - cW * 4),
-      bottom: { start: -(tW + cW * 0 - (tW - cW * 4)), end: -(cW * 0) },
-      left: { start: -(tW + cW * 1 - (tW - cW * 4)), end: -(cW * 1) },
-      top: { start: -(tW + cW * 2 - (tW - cW * 4)), end: -(cW * 2) },
-      right: { start: -(tW + cW * 3 - (tW - cW * 4)), end: -(cW * 3) }
-    }
-  }
+  console.log(boxFilled, boxOffsetAmount, textRemainderSpace, extraSpace)
 
-  // If tW is bigger sum of 3 sides
-  if (tW > cW * 3) {
-    console.log('3')
-    return {
-      emptyWidth: cW * 1 - (tW - cW * 3),
-      bottom: { start: -(tW + cW * 1 - (tW - cW * 3)), end: -(cW * 0) },
-      left: { start: -(tW + cW * 2 - (tW - cW * 3)), end: -(cW * 1) },
-      top: { start: -(tW + cW * 3 - (tW - cW * 3)), end: -(cW * 2) },
-      right: { start: -(tW + cW * 4 - (tW - cW * 3)), end: -(cW * 3) }
-    }
-  }
-
-  // If tW is bigger sum of 2 sides
-  if (tW > cW * 2) {
-    console.log('2')
-    return {
-      emptyWidth: cW * 2 - (tW - cW * 2),
-      bottom: { start: -(tW + cW * 2 - (tW - cW * 2)), end: -(cW * 0) },
-      left: { start: -(tW + cW * 3 - (tW - cW * 2)), end: -(cW * 1) },
-      top: { start: -(tW + cW * 4 - (tW - cW * 2)), end: -(cW * 2) },
-      right: { start: -(tW + cW * 5 - (tW - cW * 2)), end: -(cW * 3) }
-    }
-  }
-
-  // If tW is bigger sum of 1 sides
-  if (tW > cW * 1) {
-    console.log('1')
-    return {
-      emptyWidth: cW * 3 - (tW - cW * 1),
-      bottom: { start: -(tW + cW * 3 - (tW - cW * 1)), end: -(cW * 0) },
-      left: { start: -(tW + cW * 4 - (tW - cW * 1)), end: -(cW * 1) },
-      top: { start: -(tW + cW * 5 - (tW - cW * 1)), end: -(cW * 2) },
-      right: { start: -(tW + cW * 6 - (tW - cW * 1)), end: -(cW * 3) }
-    }
-  }
-
-  // If tW is smaller sum of 1 sides
-  console.log('0')
   return {
-    emptyWidth: cW * 4 - (tW - cW * 0),
-    bottom: { start: -(cW * 4 - (tW - cW * 0)), end: -(cW * 0) },
-    left: { start: -(cW * 5 - (tW - cW * 0)), end: -(cW * 1) },
-    top: { start: -(cW * 6 - (tW - cW * 0)), end: -(cW * 2) },
-    right: { start: -(cW * 7 - (tW - cW * 0)), end: -(cW * 3) }
+    emptyWidth: cW * (boxOffsetAmount) - textRemainderSpace + extraSpace,
+    bottom: { start: -(tW + cW * (boxOffsetAmount) - textRemainderSpace + extraSpace), end: -(cW * 0) },
+    left: { start: -(tW + cW * (boxOffsetAmount + 1) - textRemainderSpace + extraSpace), end: -(cW * 1) },
+    top: { start: -(tW + cW * (boxOffsetAmount + 2) - textRemainderSpace + extraSpace), end: -(cW * 2) },
+    right: { start: -(tW + cW * (boxOffsetAmount + 3) - textRemainderSpace + extraSpace), end: -(cW * 3) }
   }
 }
 
