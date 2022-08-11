@@ -1,9 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react'
 
-const text = 'AAAAAAAAAA BBBBBBBBBB CCCCCCCCC DDDDDDDDD EEEEEEEEEE FFFFFFFFFF GGGGGGGGGG HHHHHHHHHH IIIIIIIIII JJJJJJJJJJ'
-
 const compStyle = {
-  position: 'relative',
+  position: 'absolute',
   width: '350px',
   height: '350px',
   fontFamily: 'DMMono',
@@ -14,9 +12,8 @@ const compStyle = {
   color: 'transparent'
 }
 
-const commonContainerStyle = {
+const commonOuterContainerStyle = {
   whiteSpace: 'nowrap',
-  overflow: 'hidden',
   width: 'calc(100% - 75px)',
   height: '37.5px',
   margin: '0 37.5px',
@@ -24,36 +21,47 @@ const commonContainerStyle = {
   transformOrigin: 'top left'
 }
 
+const commonInnerContainerStyle = {
+  width: '100%',
+  height: '100%',
+  overflow: 'hidden',
+  boxSizing: 'content-box',
+  paddingBottom: '37.5px'
+}
+
 const commonTextStyle = {
   display: 'inline-block'
 }
 
 const topContainerStyle = {
-  ...commonContainerStyle,
+  ...commonOuterContainerStyle,
   transform: 'rotate(0deg)',
   top: '0',
   left: '0'
 }
 
 const rightContainerStyle = {
-  ...commonContainerStyle,
+  ...commonOuterContainerStyle,
+  transformOrigin: 'bottom left',
   transform: 'rotate(90deg)',
-  top: '37.5px',
-  left: 'calc(100% - 37.5px)'
-}
-
-const bottomContainerStyle = {
-  ...commonContainerStyle,
-  transform: 'rotate(180deg)',
-  top: '100%',
+  top: '0',
   left: 'calc(100% - 75px)'
 }
 
+const bottomContainerStyle = {
+  ...commonOuterContainerStyle,
+  transformOrigin: 'top right',
+  transform: 'rotate(180deg)',
+  top: '100%',
+  left: '-275px'
+}
+
 const leftContainerStyle = {
-  ...commonContainerStyle,
+  ...commonOuterContainerStyle,
+  transformOrigin: 'bottom left',
   transform: 'rotate(270deg)',
-  top: 'calc(100% - 37.5px)',
-  left: '-37.5px'
+  top: 'calc(100% - 75px)',
+  left: '0'
 }
 
 const getTransformValues = (widths) => {
@@ -61,24 +69,43 @@ const getTransformValues = (widths) => {
 
   // filledBoxes = amount of boxes filled | max 4, min 0
   // emptyBoxes = amount of empty boxes | max 4, min 0
-  // textRemainderSpace = remainder tW on last box | 0 boxes are filled
   // extraSpace = spacing between end and start of text to prevent sticking
+  // textTakenSpace = Text spaces on last box | 0 boxes are filled
+  const velocityPerSecond = 100
   const filledBoxes = Math.min(Math.floor(tW / cW), 4)
   const emptyBoxes = 4 - filledBoxes
-  const textRemainderSpace = filledBoxes === 4 ? 0 : tW - (cW * filledBoxes)
   const extraSpace = emptyBoxes ? 0 : 50
+  const textTakenSpace = filledBoxes === 4 ? 0 : tW % cW
+
+  // emptyWidth = total width of empty spaces needed
+  // totalWidth = total width of all 3 spans | tW + emptyWidth + tW
+  const emptyWidth = (cW * emptyBoxes) - textTakenSpace + extraSpace
+  const totalWidth = (tW * 2) + emptyWidth
 
   return {
-    totalWidth: tW * 2 + cW * (emptyBoxes) - textRemainderSpace + extraSpace,
-    emptyWidth: cW * (emptyBoxes) - textRemainderSpace + extraSpace,
-    bottom: { start: -(tW + cW * (emptyBoxes) - textRemainderSpace + extraSpace), end: -(cW * 0) },
-    left: { start: -(tW + cW * (emptyBoxes + 1) - textRemainderSpace + extraSpace), end: -(cW * 1) },
-    top: { start: -(tW + cW * (emptyBoxes + 2) - textRemainderSpace + extraSpace), end: -(cW * 2) },
-    right: { start: -(tW + cW * (emptyBoxes + 3) - textRemainderSpace + extraSpace), end: -(cW * 3) }
+    totalWidth,
+    animationTime: (totalWidth / velocityPerSecond).toFixed(1),
+    emptyWidth,
+    bottom: {
+      start: -(cW * 0),
+      end: -(totalWidth - tW + cW * 0)
+    },
+    left: {
+      start: -(cW * 1),
+      end: -(totalWidth - tW + cW * 1)
+    },
+    top: {
+      start: -(cW * 2),
+      end: -(totalWidth - tW + cW * 2)
+    },
+    right: {
+      start: -(cW * 3),
+      end: -(totalWidth - tW + cW * 3)
+    }
   }
 }
 
-function CompsNFTAroundText({ color }) {
+function CompsNFTAroundText({ color, text }) {
   const containerReference = useRef(null)
   const textReference = useRef(null)
   const [isFontReady, setIsFontReady] = useState(false)
@@ -107,15 +134,14 @@ function CompsNFTAroundText({ color }) {
   const renderText = (key) => {
     if (!isReady) return null
 
-    const velocityPerSecond = 100
-    const animationTime = (transformValues.totalWidth / velocityPerSecond).toFixed(1)
-
     return (
-      <span style={{ ...commonTextStyle, animation: `marquee-${key} ${animationTime}s linear infinite` }}>
-        <span style={commonTextStyle}>{text}</span>
-        <span style={{ ...commonTextStyle, width: `${transformValues.emptyWidth}px` }} />
-        <span style={commonTextStyle}>{text}</span>
-      </span>
+      <div style={commonInnerContainerStyle}>
+        <span style={{ ...commonTextStyle, animation: `marquee-${key} ${transformValues.animationTime}s linear infinite` }}>
+          <span style={commonTextStyle}>{text}</span>
+          <span style={{ ...commonTextStyle, height: '37.5px', width: `${transformValues.emptyWidth}px` }} />
+          <span style={commonTextStyle}>{text}</span>
+        </span>
+      </div>
     )
   }
 
