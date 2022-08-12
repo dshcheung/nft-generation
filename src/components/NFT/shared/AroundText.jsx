@@ -105,7 +105,7 @@ const getTransformValues = (widths) => {
   }
 }
 
-function CompsNFTAroundText({ color, text }) {
+function CompsNFTAroundText({ color, aroundText }) {
   const containerReference = useRef(null)
   const textReference = useRef(null)
   const [isFontReady, setIsFontReady] = useState(false)
@@ -137,9 +137,9 @@ function CompsNFTAroundText({ color, text }) {
     return (
       <div style={commonInnerContainerStyle}>
         <span style={{ ...commonTextStyle, animation: `marquee-${key} ${transformValues.animationTime}s linear infinite` }}>
-          <span style={commonTextStyle}>{text}</span>
+          <span style={commonTextStyle}>{aroundText}</span>
           <span style={{ ...commonTextStyle, height: '37.5px', width: `${transformValues.emptyWidth}px` }} />
-          <span style={commonTextStyle}>{text}</span>
+          <span style={commonTextStyle}>{aroundText}</span>
         </span>
       </div>
     )
@@ -195,8 +195,8 @@ function CompsNFTAroundText({ color, text }) {
   return (
     <div style={{ ...compStyle, WebkitTextStroke: `1px ${color}` }}>
       {/* Reference | Hidden */}
-      <div ref={containerReference} style={{ ...topContainerStyle, visibility: 'hidden' }}>
-        <span id="test" ref={textReference} style={commonTextStyle}>{text}</span>
+      <div ref={containerReference} style={{ ...topContainerStyle, visibility: 'hidden', overflow: 'hidden' }}>
+        <span id="test" ref={textReference} style={commonTextStyle}>{aroundText}</span>
       </div>
 
       {/* Top */}

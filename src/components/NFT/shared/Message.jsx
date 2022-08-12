@@ -11,10 +11,22 @@ const compStyle = {
   lineHeight: '150%'
 }
 
-function CompsNFTMessage({ message }) {
+const innerContainerStyle = {
+  width: '100%',
+  height: '100%',
+  padding: '13px'
+}
+
+function CompsNFTMessage({ color, message }) {
   return (
-    <div style={compStyle}>
-      {message}
+    <div style={{ ...compStyle, color }}>
+      <div style={innerContainerStyle}>
+        {
+          message.split('\n').map((line, index) => (
+            <div key={index}>{line}</div>
+          ))
+        }
+      </div>
     </div>
   )
 }

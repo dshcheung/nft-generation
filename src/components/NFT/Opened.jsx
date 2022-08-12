@@ -1,7 +1,8 @@
 import React from 'react'
 
 import CompsNFTBackground from '@/components/NFT/shared/Background'
-import CompsNFTGridV2 from '@/components/NFT/shared/GridV2'
+import CompsNFTGridV1 from '@/components/NFT/shared/GridV1'
+import CompsNFTMessage from '@/components/NFT/shared/Message'
 import CompsNFTAroundText from '@/components/NFT/shared/AroundText'
 
 const compsStyle = {
@@ -11,14 +12,15 @@ const compsStyle = {
   height: '350px'
 }
 
-function CompsNFTUnopen({ data: { background, fillColor, aroundText } }) {
+function CompsNFTOpened({ data: { opacity, background, fillColor, textColor, aroundText, message } }) {
   return (
     <div style={compsStyle}>
       <CompsNFTBackground background={background} />
-      <CompsNFTGridV2 color={fillColor} />
+      <CompsNFTGridV1 color={fillColor} opacity={opacity} />
       <CompsNFTAroundText color={fillColor} aroundText={aroundText} />
+      <CompsNFTMessage color={textColor} message={message} />
     </div>
   )
 }
 
-export default CompsNFTUnopen
+export default CompsNFTOpened
