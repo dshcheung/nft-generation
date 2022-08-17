@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react' // eslint-disable-line
 
-import CompsNFTUnopen from '@/components/NFT/Unopen'
+import CompsNFTUnopen from '@/components/NFT/Unopen' // eslint-disable-line
 import getAssets from '@/services/getAssets'
 
 const data = {
@@ -15,7 +15,7 @@ const data = {
 
 function PagesHome() {
   const [files, setFiles] = useState({})
-  const [preview, setPreview] = useState(null)
+  const [preview, setPreview] = useState(null) // eslint-disable-line
 
   useEffect(() => {
     const handler = async () => {
