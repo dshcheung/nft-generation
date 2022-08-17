@@ -1,4 +1,7 @@
-import React from 'react'
+import React, { useRef } from 'react'
+
+import genImageFile from '@/services/genImageFile'
+import genHTMLFile from '@/services/genHTMLFile'
 
 import CompsNFTBackground from '@/components/NFT/shared/Background'
 import CompsNFTGridV1 from '@/components/NFT/shared/GridV1'
@@ -11,12 +14,30 @@ const compsStyle = {
   height: '350px'
 }
 
-function CompsNFTBeforeOpen({ data: { background, fillColor, aroundText } }) {
+function CompsNFTBeforeOpen({
+  data: { background, gridIconColor, aroundText },
+  setImage, setHTML
+}) {
+  const reference = useRef(null)
+
+  const imageCB = () => {
+    genImageFile(reference.current, 'before-open.png', setImage)
+  }
+
+  const htmlCB = () => {
+    genHTMLFile(reference.current.outerHTML, 'before-open.html', setHTML)
+  }
+
   return (
-    <div style={compsStyle}>
+    <div style={compsStyle} ref={reference}>
       <CompsNFTBackground background={background} />
-      <CompsNFTGridV1 color={fillColor} />
-      <CompsNFTAroundText color={fillColor} aroundText={aroundText} />
+      <CompsNFTGridV1 color={gridIconColor} />
+      <CompsNFTAroundText
+        color={gridIconColor}
+        aroundText={aroundText}
+        imageCB={imageCB}
+        htmlCB={htmlCB}
+      />
     </div>
   )
 }

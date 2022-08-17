@@ -105,9 +105,10 @@ const getTransformValues = (widths) => {
   }
 }
 
-function CompsNFTAroundText({ color, aroundText }) {
+function CompsNFTAroundText({ color, aroundText, imageCB, htmlCB }) {
   const containerReference = useRef(null)
   const textReference = useRef(null)
+  const [startAnimation, setStartAnimation] = useState(false)
   const [isFontReady, setIsFontReady] = useState(false)
   const [isReady, setIsReady] = useState(false)
   const [transformValues, setTransformValues] = useState({})
@@ -131,12 +132,29 @@ function CompsNFTAroundText({ color, aroundText }) {
     }
   }, [containerReference, textReference, isFontReady])
 
+  useEffect(() => {
+    if (isFontReady && isReady) {
+      if (imageCB) imageCB()
+      setStartAnimation(true)
+    }
+  }, [isFontReady, isReady])
+
+  useEffect(() => {
+    if (startAnimation && htmlCB) {
+      htmlCB()
+    }
+  }, [startAnimation])
+
   const renderText = (key) => {
     if (!isReady) return null
 
+    const animationPlayState = startAnimation ? 'running' : 'paused'
+    const animationDuration = transformValues.animationTime
+    const animationCSS = `marquee-${key} ${animationDuration}s linear infinite ${animationPlayState}`
+
     return (
       <div style={commonInnerContainerStyle}>
-        <span style={{ ...commonTextStyle, animation: `marquee-${key} ${transformValues.animationTime}s linear infinite` }}>
+        <span style={{ ...commonTextStyle, animation: animationCSS }}>
           <span style={commonTextStyle}>{aroundText}</span>
           <span style={{ ...commonTextStyle, height: '37.5px', width: `${transformValues.emptyWidth}px` }} />
           <span style={commonTextStyle}>{aroundText}</span>

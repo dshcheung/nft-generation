@@ -7,8 +7,8 @@ const compStyle = {
   padding: '37.5px',
   fontFamily: 'NotoSansTC',
   fontWeight: '400',
-  fontSize: '24px',
-  lineHeight: '150%'
+  fontSize: '26px',
+  lineHeight: '140%'
 }
 
 const innerContainerStyle = {

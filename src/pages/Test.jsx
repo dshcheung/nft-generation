@@ -1,6 +1,6 @@
-import { useEffect } from 'react'
+import React from 'react'
 
-import getAssets from '@/services/getAssets'
+import CompsNFTMain from '@/components/NFT/Main'
 
 const data = {
   opacity: '0.5',
@@ -12,17 +12,8 @@ const data = {
   message: '在旅途中，\n小王子思考愛的真諦明白馴養的意義。\n小王子思考愛的真諦明白馴養的意義。\nI love you.\n我愛你。'
 }
 
-function PagesHome() {
-  useEffect(() => {
-    const handler = async () => {
-      const assets = await getAssets(data)
-      console.log(assets) // eslint-disable-line
-    }
-
-    handler()
-  }, [])
-
-  return null
+function PagesTest() {
+  return <CompsNFTMain data={data} />
 }
 
-export default PagesHome
+export default PagesTest
