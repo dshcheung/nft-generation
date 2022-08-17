@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import getAssets from '@/services/getAssets'
 
 const data = {
-  opacity: '0.5',
+  opacity: '0.25',
   background: 'radial-gradient(60.05% 60.05% at 50.55% 55.01%, #FFFF00 3%, #FFFF00 24%, #33FF99 100%)',
   gridIconColor: '#1919FF',
   aroundTextColor: '#1919FF',

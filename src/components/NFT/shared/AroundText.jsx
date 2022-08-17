@@ -1,5 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react'
 
+import genRandomId from '@/services/genRandomId'
+
 const compStyle = {
   position: 'absolute',
   width: '350px',
@@ -112,6 +114,7 @@ function CompsNFTAroundText({ color, aroundText, imageCB, htmlCB }) {
   const [isFontReady, setIsFontReady] = useState(false)
   const [isReady, setIsReady] = useState(false)
   const [transformValues, setTransformValues] = useState({})
+  const [randomId] = useState(genRandomId())
 
   useEffect(() => {
     const checkFontsReady = async () => {
@@ -150,7 +153,7 @@ function CompsNFTAroundText({ color, aroundText, imageCB, htmlCB }) {
 
     const animationPlayState = startAnimation ? 'running' : 'paused'
     const animationDuration = transformValues.animationTime
-    const animationCSS = `marquee-${key} ${animationDuration}s linear infinite ${animationPlayState}`
+    const animationCSS = `marquee-${key}-${randomId} ${animationDuration}s linear infinite ${animationPlayState}`
 
     return (
       <div style={commonInnerContainerStyle}>
@@ -169,7 +172,7 @@ function CompsNFTAroundText({ color, aroundText, imageCB, htmlCB }) {
       <style>
         {
           `
-            @keyframes marquee-top {
+            @keyframes marquee-top-${randomId} {
               0% {
                 transform: translateX(${transformValues.top.start}px);
               }
@@ -178,7 +181,7 @@ function CompsNFTAroundText({ color, aroundText, imageCB, htmlCB }) {
               }
             }
 
-            @keyframes marquee-right {
+            @keyframes marquee-right-${randomId} {
               0% {
                 transform: translateX(${transformValues.right.start}px);
               }
@@ -187,7 +190,7 @@ function CompsNFTAroundText({ color, aroundText, imageCB, htmlCB }) {
               }
             }
 
-            @keyframes marquee-bottom {
+            @keyframes marquee-bottom-${randomId} {
               0% {
                 transform: translateX(${transformValues.bottom.start}px);
               }
@@ -196,7 +199,7 @@ function CompsNFTAroundText({ color, aroundText, imageCB, htmlCB }) {
               }
             }
 
-            @keyframes marquee-left {
+            @keyframes marquee-left-${randomId} {
               0% {
                 transform: translateX(${transformValues.left.start}px);
               }
