@@ -16,7 +16,7 @@ const genHTMLFile = (htmlStr, filename, cb) => {
 
   const blob = new Blob([withDoctype], { type: 'text/html' })
   const file = new File([blob], filename, { type: 'text/html' })
-  cb(file)
+  if (cb) cb(file)
 }
 
 export default genHTMLFile

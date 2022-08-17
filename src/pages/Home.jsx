@@ -1,5 +1,6 @@
-import { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
+import CompsNFTUnopen from '@/components/NFT/Unopen'
 import getAssets from '@/services/getAssets'
 
 const data = {
@@ -13,15 +14,34 @@ const data = {
 }
 
 function PagesHome() {
+  const [files, setFiles] = useState({})
+  const [preview, setPreview] = useState(null)
+
   useEffect(() => {
     const handler = async () => {
       const assets = await getAssets(data)
+      setFiles(assets)
       console.log(assets) // eslint-disable-line
     }
 
     handler()
   }, [])
 
+  useEffect(() => {
+    if (files.unopenedHtml) {
+      const reader = new FileReader()
+
+      reader.addEventListener('load', () => {
+        setPreview(reader.result)
+      }, false)
+
+      reader.readAsText(files.unopenedHtml)
+    }
+  }, [files])
+
+  // eslint-disable-next-line
+  // return preview ? <div dangerouslySetInnerHTML={{ __html: preview }} /> : null
+  // return <CompsNFTUnopen data={data} />
   return null
 }
 
