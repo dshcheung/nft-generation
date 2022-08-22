@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react' // eslint-disable-line
+import React, { useEffect, useState } from 'react'
 
-import CompsNFTUnopen from '@/components/NFT/Unopen' // eslint-disable-line
 import getAssets from '@/services/getAssets'
 
 const data = {
@@ -15,7 +14,6 @@ const data = {
 
 function PagesHome() {
   const [files, setFiles] = useState({})
-  const [preview, setPreview] = useState(null) // eslint-disable-line
 
   useEffect(() => {
     const handler = async () => {
@@ -27,22 +25,51 @@ function PagesHome() {
     handler()
   }, [])
 
-  useEffect(() => {
-    if (files.unopenedHtml) {
-      const reader = new FileReader()
+  return (
+    <>
+      {
+        files.beforeOpenDataURL && (
+          <a
+            className="btn btn-primary"
+            href={files.beforeOpenDataURL}
+            download="unopened.png"
+          >Download Before Open</a>
+        )
+      }
+      {
+        // eslint-disable-next-line
+        files.beforeOpenPreview && <div dangerouslySetInnerHTML={{ __html: files.beforeOpenPreview }} />
+      }
 
-      reader.addEventListener('load', () => {
-        setPreview(reader.result)
-      }, false)
+      {
+        files.afterOpenDataURL && (
+          <a
+            className="btn btn-primary"
+            href={files.afterOpenDataURL}
+            download="opened.png"
+          >Download Opened</a>
+        )
+      }
+      {
+        // eslint-disable-next-line
+        files.afterOpenPreview && <div dangerouslySetInnerHTML={{ __html: files.afterOpenPreview }} />
+      }
 
-      reader.readAsText(files.unopenedHtml)
-    }
-  }, [files])
-
-  // eslint-disable-next-line
-  // return preview ? <div dangerouslySetInnerHTML={{ __html: preview }} /> : null
-  // return <CompsNFTUnopen data={data} />
-  return null
+      {
+        files.neverOpenedDataURL && (
+          <a
+            className="btn btn-primary"
+            href={files.neverOpenedDataURL}
+            download="neverOpened.png"
+          >Download Unopen</a>
+        )
+      }
+      {
+        // eslint-disable-next-line
+        files.neverOpenedPreview && <div dangerouslySetInnerHTML={{ __html: files.neverOpenedPreview }} />
+      }
+    </>
+  )
 }
 
 export default PagesHome

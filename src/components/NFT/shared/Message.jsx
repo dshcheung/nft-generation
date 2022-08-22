@@ -5,7 +5,7 @@ const compStyle = {
   width: '350px',
   height: '350px',
   padding: '37.5px',
-  fontFamily: 'NotoSansTC',
+  fontFamily: 'Noto Sans TC',
   fontWeight: '400',
   fontSize: '26px',
   lineHeight: '140%'

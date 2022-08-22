@@ -6,7 +6,7 @@ const compStyle = {
   position: 'absolute',
   width: '350px',
   height: '350px',
-  fontFamily: 'DMMono',
+  fontFamily: 'DM Mono',
   fontWeight: '500',
   fontStyle: 'italic',
   fontSize: '22px',
@@ -107,7 +107,7 @@ const getTransformValues = (widths) => {
   }
 }
 
-function CompsNFTAroundText({ color, aroundText, imageCB, htmlCB }) {
+function CompsNFTAroundText({ color, aroundText, imageCB, htmlCB, previewCB, dataUrlCB }) {
   const containerReference = useRef(null)
   const textReference = useRef(null)
   const [startAnimation, setStartAnimation] = useState(false)
@@ -138,13 +138,15 @@ function CompsNFTAroundText({ color, aroundText, imageCB, htmlCB }) {
   useEffect(() => {
     if (isFontReady && isReady) {
       if (imageCB) imageCB()
+      if (dataUrlCB) dataUrlCB()
       setStartAnimation(true)
     }
   }, [isFontReady, isReady])
 
   useEffect(() => {
-    if (startAnimation && htmlCB) {
-      htmlCB()
+    if (startAnimation) {
+      if (htmlCB) htmlCB()
+      if (previewCB) previewCB()
     }
   }, [startAnimation])
 
@@ -157,7 +159,7 @@ function CompsNFTAroundText({ color, aroundText, imageCB, htmlCB }) {
 
     return (
       <div style={commonInnerContainerStyle}>
-        <span style={{ ...commonTextStyle, animation: animationCSS }}>
+        <span id={`${key}-${randomId}`} style={{ ...commonTextStyle, animation: animationCSS }}>
           <span style={commonTextStyle}>{aroundText}</span>
           <span style={{ ...commonTextStyle, height: '37.5px', width: `${transformValues.emptyWidth}px` }} />
           <span style={commonTextStyle}>{aroundText}</span>
@@ -172,6 +174,22 @@ function CompsNFTAroundText({ color, aroundText, imageCB, htmlCB }) {
       <style>
         {
           `
+            #top-${randomId} {
+              transform: translateX(${transformValues.top.start}px);
+            }
+
+            #right-${randomId} {
+              transform: translateX(${transformValues.right.start}px);
+            }
+
+            #bottom-${randomId} {
+              transform: translateX(${transformValues.bottom.start}px);
+            }
+
+            #left-${randomId} {
+              transform: translateX(${transformValues.left.start}px);
+            }
+
             @keyframes marquee-top-${randomId} {
               0% {
                 transform: translateX(${transformValues.top.start}px);
