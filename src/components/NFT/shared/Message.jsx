@@ -5,10 +5,11 @@ const compStyle = {
   width: '350px',
   height: '350px',
   padding: '37.5px',
-  fontFamily: 'Noto Sans TC',
+  fontFamily: '"Noto Sans TC", "NotoSansTC"',
   fontWeight: '400',
   fontSize: '26px',
-  lineHeight: '140%'
+  lineHeight: '140%',
+  boxSizing: 'border-box'
 }
 
 const innerContainerStyle = {

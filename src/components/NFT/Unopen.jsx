@@ -5,7 +5,6 @@ import genHTMLFile from '@/services/genHTMLFile'
 import genPreview from '@/services/genPreview'
 import genDataURL from '@/services/genDataURL'
 
-import CompsNFTFonts from '@/components/NFT/shared/Fonts'
 import CompsNFTBackground from '@/components/NFT/shared/Background'
 import CompsNFTGridV2 from '@/components/NFT/shared/GridV2'
 import CompsNFTAroundText from '@/components/NFT/shared/AroundText'
@@ -41,7 +40,6 @@ function CompsNFTUnopen({
 
   return (
     <div style={compsStyle} ref={reference}>
-      <CompsNFTFonts />
       <CompsNFTBackground background={background} />
       <CompsNFTGridV2 color={gridIconColor} />
       <CompsNFTAroundText

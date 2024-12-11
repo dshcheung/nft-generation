@@ -6,7 +6,7 @@ const compStyle = {
   position: 'absolute',
   width: '350px',
   height: '350px',
-  fontFamily: 'DM Mono',
+  fontFamily: '"DM Mono", "DMMono"',
   fontWeight: '500',
   fontStyle: 'italic',
   fontSize: '22px',
@@ -32,7 +32,8 @@ const commonInnerContainerStyle = {
 }
 
 const commonTextStyle = {
-  display: 'inline-block'
+  height: '37.5px',
+  display: 'block'
 }
 
 const topContainerStyle = {

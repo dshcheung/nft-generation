@@ -3,3 +3,16 @@
 body {
   background-color: white;
 }
+
+@font-face {
+  font-family: 'DMMono';
+  src: url("@/assets/fonts/DMMono-MediumItalic.ttf") format("truetype");
+  font-weight: 500;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'NotoSansTC';
+  src: "@assets/fonts/NotoSansTC-Regular.otf" format("opentype");
+  font-weight: 400;
+}
